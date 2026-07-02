@@ -1,0 +1,4 @@
+# @package model.decoder_kwargs
+decoder_channels: [256, 128, 64, 32]
+norm: batch
+activation: relu

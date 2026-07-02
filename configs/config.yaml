@@ -1,0 +1,24 @@
+defaults:
+  - _self_
+  - data: local
+  - model: nowcaster
+  - model/encoder: resnet34
+  - model/temporal: none
+  - model/decoder: unet
+  - loss: base
+  - optimizer: adamw
+  - scheduler: onecycle
+  - training: base
+  - augmentation: base
+  - experiment: null
+
+seed: 42
+device: cuda
+output_dir: ${oc.env:SOLAFUNE_OUTPUT_DIR,outputs}
+
+hydra:
+  run:
+    dir: ${output_dir}/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  output_subdir: .hydra
+  job:
+    chdir: false

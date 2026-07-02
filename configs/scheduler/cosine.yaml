@@ -1,0 +1,4 @@
+# @package scheduler
+name: cosine
+warmup_epochs: 3
+eta_min: 1.0e-6

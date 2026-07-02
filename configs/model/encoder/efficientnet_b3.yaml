@@ -1,0 +1,4 @@
+# @package model.encoder_kwargs
+norm: batch
+activation: silu
+drop_path_rate: 0.2

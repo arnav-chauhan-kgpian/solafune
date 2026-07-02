@@ -1,0 +1,19 @@
+# @package model
+in_channels_per_frame: 10       # ir_only bands (max across satellites)
+n_frames: 3
+n_diff_frames: 2
+
+encoder: resnet34
+temporal: none
+decoder: unet
+
+probabilistic: false
+head_hidden_channels: 0
+aux_dim: 6
+aux_embed_dim: 64
+
+encoder_kwargs: {}
+temporal_kwargs: {}
+decoder_kwargs: {}
+
+output_size: [41, 41]

@@ -1,0 +1,20 @@
+# @package training
+epochs: 50
+grad_accum_steps: 1
+grad_clip: 1.0
+amp: true
+channels_last: false
+ema_enabled: true
+ema_decay: 0.9999
+ema_validate: true
+early_stop_patience: 10
+monitor: val_rmse
+monitor_mode: min
+log_every_n_steps: 50
+keep_last_n_ckpt: 3
+output_dir: outputs
+step_scheduler_each_batch: true
+rain_threshold_mm_h: 0.1
+heavy_threshold_mm_h: 10.0
+non_blocking: true
+use_tensorboard: true

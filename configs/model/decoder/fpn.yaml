@@ -1,0 +1,5 @@
+# @package model.decoder_kwargs
+fpn_channels: 256
+out_channels: 64
+norm: batch
+activation: relu

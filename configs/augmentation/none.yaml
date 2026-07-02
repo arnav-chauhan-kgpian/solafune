@@ -1,0 +1,9 @@
+# @package augmentation
+kind: none
+horizontal_flip_prob: 0.0
+vertical_flip_prob: 0.0
+rotate90_prob: 0.0
+band_dropout_prob: 0.0
+band_dropout_type: visible
+noise_enabled: false
+noise_sigma: 0.0

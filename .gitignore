@@ -1,0 +1,46 @@
+# Cache and generated artifacts
+cache/
+outputs/
+*.zarr/
+*.bin
+*.memmap
+
+# Datasets (checked in as external Kaggle Dataset, not tracked here)
+train_dataset_*/
+evaluation_dataset_*/
+sample_submission_*/
+*.tif
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.hydra/
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Notebooks (checkpoints only; keep the ipynb itself)
+.ipynb_checkpoints/
+
+# Model artifacts
+*.pt
+*.pth
+*.ckpt
+tensorboard/
+runs/
+wandb/
+
+# Solution design PDF (external, not in repo)
+"Solution Design for Solafune Satellite Precipitation Nowcasting Challenge.pdf"

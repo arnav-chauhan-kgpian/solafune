@@ -1,0 +1,4 @@
+# @package _global_
+# Exp 0 — strong baseline: ResNet34 + UNet + none-temporal, log1p target,
+# rain-weighted MSE + BCE, precip-stratified sampling.
+seed: 42

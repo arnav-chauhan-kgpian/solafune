@@ -1,0 +1,7 @@
+# @package model.temporal_kwargs
+out_channels_per_step: 64
+kernel_size: [3, 3, 3]
+norm: batch
+activation: gelu
+temporal_reduce: concat
+include_diffs_in_conv: true

@@ -1,0 +1,5 @@
+# @package model.encoder_kwargs
+norm: batch
+activation: relu
+attention: none
+drop_path_rate: 0.0

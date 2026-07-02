@@ -1,0 +1,5 @@
+# @package model.temporal_kwargs
+hidden_dim: 128
+kernel_size: 3
+include_diffs_in_input: true
+use_gradient_checkpointing: false

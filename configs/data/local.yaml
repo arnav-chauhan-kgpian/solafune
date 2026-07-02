@@ -1,0 +1,47 @@
+# @package data
+# Local (Windows workstation) data config.
+
+train_csv: D:/solafune/train_dataset_b1c74968f2f24eaeb2852b47b80a581e/train_dataset.csv
+eval_csv: D:/solafune/evaluation_dataset_ba14cc1598034cc689eaf39b4f80c09d/evaluation_target.csv
+train_root: D:/solafune/train_dataset_b1c74968f2f24eaeb2852b47b80a581e
+eval_root: D:/solafune/evaluation_dataset_ba14cc1598034cc689eaf39b4f80c09d
+cache_dir: D:/solafune/cache
+norm_stats_path: D:/solafune/cache/norm_stats.json
+
+image_size: 96
+interpolation: bilinear
+resize_backend: torch
+
+bands: ir_only
+
+cache:
+  backend: zarr
+  zarr_compressor: lz4
+  chunk_size: 16
+  benchmark_path: D:/solafune/cache/backend.json
+  memmap_dtype: uint8
+
+frames: 3
+include_diff_frames: true
+missing_frame_strategy: repeat_last
+
+val_locations:
+  - aceh
+  - ecuador
+  - andalusia
+  - atlantic_coast
+
+sampling:
+  strategy: precip_stratified
+  precip_weight_scale: 3.0
+
+rain_threshold: 0.1
+
+batch_size: 16
+num_workers: 2
+pin_memory: true
+persistent_workers: true
+prefetch_factor: 2
+non_blocking: true
+drop_last: true
+shuffle_train: true

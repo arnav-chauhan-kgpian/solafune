@@ -1,0 +1,20 @@
+# @package loss
+mse_weight: 1.0
+mae_weight: 0.0
+smooth_l1_weight: 0.0
+huber_weight: 0.0
+huber_delta: 1.0
+
+rain_weighted: true
+rain_weight_scale: 3.0
+
+bce_weight: 0.5
+focal_gamma: 0.0
+
+nll_weight: 0.0
+
+gradient_weight: 0.0
+ssim_weight: 0.0
+dice_weight: 0.0
+
+mask_missing_frames: true
