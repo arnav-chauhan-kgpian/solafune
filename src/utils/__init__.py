@@ -12,7 +12,9 @@ from .io import (
     TIFMetadata,
     TIFReadError,
     read_gpm_tif,
+    read_gpm_tif_from_bytes,
     read_satellite_tif,
+    read_satellite_tif_from_bytes,
     validate_tif,
     write_gpm_tif,
 )
@@ -28,7 +30,9 @@ __all__ = [
     "TIFMetadata",
     "TIFReadError",
     "read_gpm_tif",
+    "read_gpm_tif_from_bytes",
     "read_satellite_tif",
+    "read_satellite_tif_from_bytes",
     "validate_tif",
     "write_gpm_tif",
 ]

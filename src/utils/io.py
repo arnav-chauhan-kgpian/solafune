@@ -92,6 +92,77 @@ def _extract_metadata(src, path: PathLike) -> TIFMetadata:
     )
 
 
+def read_satellite_tif_from_bytes(
+    data: bytes,
+    label: str = "<bytes>",
+    expected_size: Optional[Tuple[int, int]] = None,
+    expected_bands: int = NUM_BANDS_TOTAL,
+    validate_dtype: bool = True,
+) -> Tuple[np.ndarray, TIFMetadata]:
+    """Read a satellite TIF from an in-memory bytes buffer.
+
+    Used by the streaming ZIP-based preprocessing pipeline so we never
+    materialise the full extracted TIF tree on disk.
+    """
+    _require_rasterio()
+    try:
+        with rasterio.MemoryFile(data) as memfile:
+            with memfile.open() as src:
+                meta = _extract_metadata(src, label)
+                if meta.count != expected_bands:
+                    raise TIFReadError(
+                        f"{label}: expected {expected_bands} bands, got {meta.count}"
+                    )
+                if validate_dtype and meta.dtype != SAT_RAW_DTYPE:
+                    raise TIFReadError(
+                        f"{label}: expected dtype {SAT_RAW_DTYPE}, got {meta.dtype}"
+                    )
+                if expected_size is not None and (meta.height, meta.width) != expected_size:
+                    raise TIFReadError(
+                        f"{label}: expected size {expected_size}, "
+                        f"got ({meta.height}, {meta.width})"
+                    )
+                arr = src.read()
+                if arr.ndim != 3:
+                    raise TIFReadError(
+                        f"{label}: expected 3D array (C, H, W), got shape {arr.shape}"
+                    )
+                if arr.dtype != np.uint8 and validate_dtype:
+                    arr = arr.astype(np.uint8, copy=False)
+                return arr, meta
+    except RasterioIOError as e:
+        raise TIFReadError(f"{label}: rasterio failed: {e}") from e
+
+
+def read_gpm_tif_from_bytes(
+    data: bytes,
+    label: str = "<bytes>",
+    expected_size: Tuple[int, int] = GPM_SIZE,
+) -> Tuple[np.ndarray, TIFMetadata]:
+    """Read a GPM IMERG TIF from an in-memory bytes buffer."""
+    _require_rasterio()
+    try:
+        with rasterio.MemoryFile(data) as memfile:
+            with memfile.open() as src:
+                meta = _extract_metadata(src, label)
+                if meta.count != 1:
+                    raise TIFReadError(
+                        f"{label}: expected 1 band GPM tif, got {meta.count}"
+                    )
+                if (meta.height, meta.width) != expected_size:
+                    raise TIFReadError(
+                        f"{label}: expected {expected_size}, got ({meta.height}, {meta.width})"
+                    )
+                arr = src.read(1)
+                if arr.dtype != np.float32:
+                    arr = arr.astype(np.float32, copy=False)
+                if not np.isfinite(arr).all():
+                    raise TIFReadError(f"{label}: contains non-finite values")
+                return arr, meta
+    except RasterioIOError as e:
+        raise TIFReadError(f"{label}: rasterio failed: {e}") from e
+
+
 def read_satellite_tif(
     path: PathLike,
     expected_size: Optional[Tuple[int, int]] = None,
