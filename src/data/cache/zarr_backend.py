@@ -47,10 +47,12 @@ class ZarrBackend(CacheBackend):
         spec: CacheSpec,
         compressor: str = "lz4",
         chunk_size: int = 16,
+        clevel: int = 3,
     ):
         super().__init__(spec)
         self._compressor_name = compressor
         self._chunk_size = int(chunk_size)
+        self._clevel = int(clevel)
         self._sat_arrays: dict = {}
         self._gpm_array = None
         self._valid_mask_array = None
@@ -72,7 +74,7 @@ class ZarrBackend(CacheBackend):
         cname_map = {"lz4": "lz4", "zstd": "zstd", "blosclz": "blosclz"}
         cname = cname_map.get(self._compressor_name, "lz4")
         try:
-            return Blosc(cname=cname, clevel=3, shuffle=Blosc.SHUFFLE)
+            return Blosc(cname=cname, clevel=self._clevel, shuffle=Blosc.SHUFFLE)
         except Exception:
             return None
 
