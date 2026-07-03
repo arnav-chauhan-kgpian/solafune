@@ -1,6 +1,6 @@
-# Cache and generated artifacts
-cache/
-outputs/
+# Cache and generated artifacts (top-level only — don't shadow src/data/cache/)
+/cache/
+/outputs/
 *.zarr/
 *.bin
 *.memmap
