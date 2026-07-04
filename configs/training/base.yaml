@@ -5,7 +5,7 @@ grad_clip: 1.0
 amp: true
 channels_last: false
 ema_enabled: true
-ema_decay: 0.9999
+ema_decay: 0.999            # ~10x faster tracking than 0.9999 — required for short (10–50 epoch) runs
 ema_validate: true
 early_stop_patience: 10
 monitor: val_rmse

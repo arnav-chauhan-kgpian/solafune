@@ -234,16 +234,35 @@ class Trainer:
             self._tb_log("train", {"epoch_time_s": epoch_secs}, epoch)
 
             # ---------- validation ----------
+            # Picks the best-scoring weights (raw vs. EMA) as the epoch's
+            # val_metric. This matters for short training runs where the
+            # EMA hasn't converged and would otherwise pin best.pt to
+            # near-initial (bad) weights.
             val_metric: Optional[float] = None
+            best_source: str = "raw"
+            metric_key = cfg.monitor.replace("val_", "")
             if self.val_loader is not None:
                 metrics_raw = self.validate(use_ema=False)
                 self._log_val(metrics_raw, tag="raw")
+                raw_v = metrics_raw.get(metric_key)
+                ema_v: Optional[float] = None
                 if self.ema is not None and cfg.ema_validate:
                     metrics_ema = self.validate(use_ema=True)
                     self._log_val(metrics_ema, tag="ema")
-                    val_metric = metrics_ema.get(cfg.monitor.replace("val_", ""))
-                if val_metric is None:
-                    val_metric = metrics_raw.get(cfg.monitor.replace("val_", ""))
+                    ema_v = metrics_ema.get(metric_key)
+                if raw_v is not None and ema_v is not None:
+                    if cfg.monitor_mode == "min":
+                        best_source = "ema" if ema_v < raw_v else "raw"
+                    else:
+                        best_source = "ema" if ema_v > raw_v else "raw"
+                    val_metric = ema_v if best_source == "ema" else raw_v
+                elif ema_v is not None:
+                    val_metric, best_source = ema_v, "ema"
+                elif raw_v is not None:
+                    val_metric, best_source = raw_v, "raw"
+                log.info("epoch %d monitor=%s value=%.4f source=%s",
+                         epoch, metric_key, val_metric if val_metric is not None else float("nan"),
+                         best_source)
 
             # ---------- scheduler (epoch) ----------
             if self.scheduler is not None and not cfg.step_scheduler_each_batch:
@@ -256,6 +275,8 @@ class Trainer:
                     pass
 
             # ---------- checkpoint ----------
+            # `best_source` tells inference which weights (raw vs. ema) won
+            # the monitor race at save time — always load those.
             state = {
                 "model": self.model.state_dict(),
                 "optimizer": self.optimizer.state_dict(),
@@ -263,6 +284,7 @@ class Trainer:
                 "scaler": self.scaler.state_dict(),
                 "ema": self.ema.state_dict() if self.ema is not None else None,
                 "best_val_metric": self._best,
+                "best_source": best_source,
                 "cfg": vars(cfg),
             }
             self.ckpt.save(state, epoch=epoch, val_metric=val_metric)
