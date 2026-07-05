@@ -1,0 +1,13 @@
+# @package _global_
+# Exp 2 — 3D temporal stem. Captures inter-frame cloud motion the baseline
+# treats as independent slices. EDA showed 5-15 DN inter-frame differences
+# carry real signal.
+model:
+  temporal: conv3d
+  temporal_kwargs:
+    out_channels_per_step: 64
+    kernel_size: [3, 3, 3]
+    norm: batch
+    activation: gelu
+    temporal_reduce: concat
+    include_diffs_in_conv: true

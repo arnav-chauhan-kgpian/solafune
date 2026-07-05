@@ -1,0 +1,9 @@
+# @package _global_
+# Exp 6 — Encoder swap to EfficientNet-B3 (~12 M params, better spatial
+# per-parameter efficiency than ResNet-34).
+model:
+  encoder: efficientnet_b3
+  encoder_kwargs:
+    norm: batch
+    activation: silu
+    drop_path_rate: 0.2

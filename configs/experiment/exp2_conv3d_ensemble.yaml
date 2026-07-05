@@ -1,0 +1,15 @@
+# @package _global_
+# Combined config: Conv3D temporal + probabilistic head. Strong single-model
+# entry for an ensemble.
+model:
+  temporal: conv3d
+  probabilistic: true
+  temporal_kwargs:
+    out_channels_per_step: 64
+    kernel_size: [3, 3, 3]
+    norm: batch
+    activation: gelu
+    temporal_reduce: concat
+    include_diffs_in_conv: true
+loss:
+  nll_weight: 0.2
